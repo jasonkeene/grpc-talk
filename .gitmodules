@@ -1,0 +1,3 @@
+[submodule "src/github.com/golang/protobuf"]
+	path = src/github.com/golang/protobuf
+	url = git@github.com:golang/protobuf

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>A Tour of gRPC in Go</title>
+<meta charset="utf-8">
+<style>
+
+@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+@import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+@import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+body {
+    font-family: 'Droid Serif';
+}
+h1, h2, h3 {
+    font-family: 'Yanone Kaffeesatz';
+    font-weight: normal;
+}
+.remark-code, .remark-inline-code {
+    font-family: 'Ubuntu Mono';
+}
+table {
+    margin: 25px;
+}
+table td {
+    padding: 5px;
+}
+table td i {
+    color: red;
+}
+blockquote {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 50px;
+  padding-left: 15px;
+  border-left: 3px solid #ccc;
+}
+
+</style>
+</head>
+<body>
+<textarea id="source">
+
+class: center, middle
+
+# A Tour of gRPC in Go
+
+---
+
+## What is gRPC?
+
+- gRPC is a point to point RPC for req/resp and streaming.
+- It has native Go, C and Java implementations, all other languages use C
+  bindings.
+- It is primarily used for internal communications but is seeing wide
+  adoption in the Go ecosystem.
+- It runs over h2, the future of the web!
+
+---
+
+## How do you use it?
+
+- Create a protobuf definition file.
+- Generate the client and server stubs.
+- Implement the server interface to respond to requests.
+- Register your server interface and start servicing requests!
+
+---
+
+class: center, middle
+
+# Demo Time!
+
+---
+
+## What if the consumers of my API don't speak h2?
+
+- gRPC Gateway
+
+![](https://camo.githubusercontent.com/e75a8b46b078a3c1df0ed9966a16c24add9ccb83/68747470733a2f2f646f63732e676f6f676c652e636f6d2f64726177696e67732f642f3132687034435071724e5046686174744c5f63496f4a707446766c41716d35774c513067677149356d6b43672f7075623f773d37343926683d333730)
+
+---
+
+## How to I protect my API from unauthorized access?
+
+- Mutual Auth TLS
+- Oauth2
+- Custom Auth
+
+---
+
+## How do I scale this?
+
+- Built in Load Balancing
+- Custom Load Balancing
+
+---
+
+## How do I roll out new versions of my API?
+
+- Protobuf package names and registration.
+
+---
+
+## What happens when things go wrong?
+
+- gRPC reconnects for you! At least for req/resp.
+- Each endpoint receives a context that can be used to teardown an entire
+  chain of interactions between multiple systems.
+- When streaming data to clients gRPC will quickly fill a client side buffer
+  that allows clients to read at their own rate and servers to come up and down
+  without the client being aware.
+
+---
+
+class: center, middle
+
+### This sounds nice but how does it compare with other technologies?
+
+---
+
+### REST/JSON
+
+#### Pros
+
+- Large adoption/effectively the defacto API for the internet.
+
+#### Cons
+
+- No streaming.
+- Text based encoding.
+- Text based transport (lots of repeated bytes over the wire).
+- Implementations vary significantly.
+- Roll your own clients.
+- Auth is choose your own adventure.
+
+---
+
+### Websockets
+
+#### Pros
+
+- Bi-directional streaming!
+- Large adoption with proxies and firewalls.
+
+#### Cons
+
+- Can not interleave data frames.
+- Roll your own clients.
+- Seems to be obsoleted by h2.
+
+---
+
+### zeromq, nanomsg/mangos
+
+#### Pros
+
+- A variety of messaging patterns, not just point to point (push/pull, pub/sub,
+  req/resp).
+- Everything reconnects for you (including streams).
+- Load balancing built in.
+- Socket style API.
+- Implementations in various languages.
+
+#### Cons
+
+- Not suitable for the internet.
+- Has not seen wide adoption.
+
+---
+
+### gRPC
+
+#### Pros
+
+- Native implementation in Go so no need for calling into cgo.
+- Is seeing adoption in the Go ecosystem (etcd, prometheus, docker, etc).
+- Built in muxing of multiple streams across a single TCP connection.
+- Binary serialization and h2 header compression means less bytes over the
+  wire.
+- gRPC gateway for REST API support.
+- Generate all the clients!
+- Automatically reconnect if server goes down and comes back up.
+- Built in authentication, encryption and message integrity.
+- Built in support for compression (uses alot of CPU).
+
+#### Cons
+
+- Point to point. No PUB/SUB or Fan in/Fan out.
+- Streaming does not auto reconnect.
+- Does not work well on the internet (yet).
+
+---
+
+class: center, middle
+
+# That's all folks! Questions?
+
+github.com/jasonkeene
+
+</textarea>
+<script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+</script>
+<script>
+var slideshow = remark.create();
+</script>
+</body>
+</html>

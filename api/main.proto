@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package gophers;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service GopherAPI {
+    rpc GetGopher(GopherRequest) returns (Gopher);
+    rpc StreamGophers(google.protobuf.Empty) returns (stream Gopher);
+    rpc UploadGophers(stream Gopher) returns (google.protobuf.Empty);
+    rpc GopherChat(stream ChatMessage) returns (stream ChatMessage);
+}
+
+message GopherRequest {
+    string id = 1;
+}
+
+message Gopher {
+    string id = 1;
+    string name = 2;
+    uint64 age = 3;
+}
+
+message ChatMessage {
+    google.protobuf.Timestamp timestamp = 1;
+    string content = 2;
+}
